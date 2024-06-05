@@ -25,7 +25,7 @@ function App() {
 
   const activePlayer = deriveActivePlayer(gameTurns);
 
-  let gameBoard = initialGameBoard;
+  let gameBoard = [...initialGameBoard.map((innerArray) => [...innerArray])];
 
   for (const turn of gameTurns) {
     const { square, player } = turn;
@@ -37,7 +37,6 @@ function App() {
     const secondSquare = gameBoard[combination[1].row][combination[1].column];
     const thirdSquare = gameBoard[combination[2].row][combination[2].column];
 
-    console.log(firstSquare);
     if (
       firstSquare &&
       firstSquare === secondSquare &&
@@ -62,6 +61,10 @@ function App() {
     });
   }
 
+  function handleRestart() {
+    setGameTurns([]);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -69,7 +72,9 @@ function App() {
           <Player name="Player 1" symbol="X" isActive={activePlayer === "X"} />
           <Player name="Player 2" symbol="O" isActive={activePlayer === "O"} />
         </ol>
-        {(winner || hasDraw) && <GameOver winner={winner} />}
+        {(winner || hasDraw) && (
+          <GameOver winner={winner} restart={handleRestart} />
+        )}
         <GameBoard
           onSelectSquared={handleSelectSquare}
           turns={gameTurns}
